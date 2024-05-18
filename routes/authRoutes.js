@@ -15,6 +15,29 @@ mongoose.connect(process.env.DATABASE).then(() => {
 //Staff model
 const Staff = require("./models/staff.js");
 
+//Skapa användare
+router.post("/register", async (req, res) => {
+    try{
+        const { username, password } = req.body         //Läser in input från användare
+    
+        //Validera input
+        if(!username || !password) {
+            return res.status(400).json({error: "Felaktigt input, skicka användarnamn och lösenord"});
+        }else {
+            //Korrekt input
+            const staff = new Staff({ username, password });    //Använder staffSchema från staff.js för lagring av ny användare
+            await staff.save();
+
+            res.status(200).json({message: "Användare skapad"});
+        }
+    }catch (error){
+        console.error("Server error", error);
+        res.status(500).json({error: "Server error"} + error);
+    }
+});
+
+
+
 
 //Exporterar all kod till app.use i server.js
 module.exports = router;
