@@ -14,6 +14,8 @@ mongoose.connect(process.env.DATABASE).then(() => {
 
 //Staff model
 const Staff = require("../models/staff.js");
+//Menu model
+const Menu = require("../models/menu.js");
 
 //Skapa användare
 router.post("/register", async (req, res) => {
@@ -136,6 +138,10 @@ router.delete("/staff/:id", async (req, res) => {
         res.status(500).json({ error: "Server error"});
     }
 });
+
+
+/*******ROUTES för menu ****************/
+
 
 //Exporterar all kod till app.use i server.js
 module.exports = router;
