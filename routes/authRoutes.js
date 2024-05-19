@@ -172,6 +172,58 @@ router.post("/createMenu", async (req, res) => {
     }
 });
 
+//Hämta maträtter
+router.get("/menu", async (req, res) => {
+    try{
+        console.log("Fetching menyer");                                                              //Loggar för att se ifall kod nås pga server-error
+        const menus = await Menu.find();
+        console.log("Menyer fetched:", menus);                                                       // Logga resultatet pga server-error
+        res.status(200).json(menus);
+    }catch (error){
+        console.error("Server fel" + error);
+        res.status(500).json({ error: "Server fel"});
+    }
+    });
+
+
+//Hämta specifik maträtt
+
+//Uppdatera maträtt
+router.put("/menu/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, description, price } = req.body;
+
+        //Validera input
+        if (!name) {
+            return res.status(400).json({ error: "Felaktig input, skicka namn på maträtt"});
+        }
+
+        //Uppdatera maträtt
+        await Staff.findByIdAndUpdate(id, { name, description, price });
+
+        res.status(200).json({ message: "Meny uppdaterat"});
+    }catch (error) {
+        console.error("Server error:", error);
+        res.status(500).json({ error: "Server error"});
+    }
+});
+
+//Radera maträtt
+router.delete("/menu/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        //Radera användare
+        await Menu.findByIdAndDelete(id);
+
+        res.status(200).json({ message: "Meny raderad"});
+    }catch (error) {
+        console.error("Server error", error);
+        res.status(500).json({ error: "Server error"});
+    }
+});
+
 
 //Exporterar all kod till app.use i server.js
 module.exports = router;
