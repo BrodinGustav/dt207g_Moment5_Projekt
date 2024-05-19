@@ -189,8 +189,8 @@ router.get("/menu", async (req, res) => {
 //Hämta specifik maträtt
 router.get("/menu/:id", async (req, res) => {
     try{
-        const { id } = req.params.id;
-        const menu = await Menu.getMenuById(id);
+        const { id } = req.params;
+        const menu = await Menu.findById(id);
         if(!menu) {
             return res.status(404).json({ error: "Meny hittades ej"});
         }                                                    
