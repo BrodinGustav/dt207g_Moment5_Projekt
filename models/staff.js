@@ -9,11 +9,11 @@ const staffSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        trim: true,
+        trim: true
     },
     password: {
-        type:String,
-        required: true,
+        type: String,
+        required: true
     },
     created: {
         type: Date,
@@ -35,11 +35,11 @@ staffSchema.pre("save", async function(next) {                          //pre k�
 });
 
 //Registrera staff
-staffSchema.static.register = async function (username, password) {
+staffSchema.statics.register = async function (username, password) {
     try {
         const staff = new this ({ username, password });
         await staff.save();                                             //lagrar staff i databasen
-        return user;
+        return staff;
     }catch(error) {
         throw error;
     }
@@ -52,10 +52,10 @@ staffSchema.methods.comparePassword = async function(password) {
     }catch (error){
         throw error;
     }
-}
+};
 
 //Metod för inlogg
-staffSchema.static.login = async function(username, password) {
+staffSchema.statics.login = async function(username, password) {
     try{
         const staff = await this.findOne({ username });             //Kontroll om användare finns
         

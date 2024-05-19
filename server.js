@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");                          //Formulärh
 const cors = require("cors");                                       //Korsdomänförfrågningar
 const authRoutes = require("./routes/authRoutes");                  //Autentiseringsrutter
 const jwt = require("jsonwebtoken");                                //JSON Webtokenhantering
-require ("dotenv").config();                                        
+require ("dotenv").config();                                        //Kopplar till .env                                 
 
 const app = express();                                              //Instans av express
 const port = process.env.PORT || 3000;                                  
