@@ -14,7 +14,7 @@ const menuSchema = new mongoose.Schema({
         required: true
     },
     price: {
-        type: number,
+        type: Number,
         required: true
     },
     created: {
@@ -24,9 +24,9 @@ const menuSchema = new mongoose.Schema({
 });
 
 //Registrering av ny maträtt
-menuScehma.statics.createMenu = async function(name, description, price) {
+menuSchema.statics.createMenu = async function(name, description, price) {
     try {
-        const menu = new this({ foodname, description, price });
+        const menu = new this({ name, description, price });
         await menu.save();
         return menu;
     }catch (error) {
@@ -35,7 +35,7 @@ menuScehma.statics.createMenu = async function(name, description, price) {
 };
 
 //Hämta alla maträtter
-menuScehma.statics.getAllMenus = async function() {
+menuSchema.statics.getAllMenus = async function() {
     try{
         const menus = await find.this();
         return menus;

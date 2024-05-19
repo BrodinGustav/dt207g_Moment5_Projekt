@@ -143,5 +143,35 @@ router.delete("/staff/:id", async (req, res) => {
 /*******ROUTES för menu ****************/
 
 
+//Skapa meny
+router.post("/createMenu", async (req, res) => {
+    try{
+        console.log("Inkommande data:", req.body);       //Loggar input
+        const { name, description, price } = req.body         //Läser in input från användare
+    
+        //Validera input
+        if(!name || !description || !price) {
+            return res.status(400).json({error: "Felaktigt input, skicka namn, beskrivning och pris"});
+        }
+
+        //Kontroll om användare redan finns
+        const existingMenu = await Menu.findOne({ name });
+        if(existingMenu) {
+            return res.status(400).json({ error: "Namn för maträtt finns redan"});
+        }
+
+            //Korrekt input - skapa ny maträtt
+            const menu = new Menu({ name, description, price });    
+            await menu.save();
+
+            res.status(200).json({message: "Meny skapad"});
+        
+    }catch (error){
+        console.error("Server error", error);
+        res.status(500).json({error: "Server error"} + error);
+    }
+});
+
+
 //Exporterar all kod till app.use i server.js
 module.exports = router;
