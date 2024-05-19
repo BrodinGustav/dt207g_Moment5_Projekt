@@ -68,7 +68,52 @@ router.post("/login", async (req, res) => {
     }
 });
 
+//Hämta all personal
+router.get("/staff", async (req, res) => {
+    try{
+        const employees = await Staff.find();
+        res.status(200).json(employees);
+    }catch (error){
+        console.error("Server fel" + error);
+        res.status(500).json({ error: "Server fel"});
+    }
+    });
 
+//Uppdatera anställds lösenord
+router.put("/staff/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { password } = req.body;
+
+        //Validera input
+        if (!password) {
+            return res.status(400).json({ error: "Felaktig input, skicka lösenord"});
+        }
+
+        //Uppdatera lösen
+        await Staff.findByIdAndUpdate(id, { password });
+
+        res.status(200).json({ message: "Användares lösenord uppdaterat"});
+    }catch (error) {
+        console.error("Server error:", error);
+        res.status(500).json({ error: "Server error"});
+    }
+});
+
+//Ta bort användare
+router.delete("/staff/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        //Radera användare
+        await Staff.findByIdAndDelete(id);
+
+        res.status(200).json({ message: "Användare raderad"});
+    }catch (error) {
+        console.error("Server error", error);
+        res.status(500).json({ error: "Server error"});
+    }
+});
 
 //Exporterar all kod till app.use i server.js
 module.exports = router;
