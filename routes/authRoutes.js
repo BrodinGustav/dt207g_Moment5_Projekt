@@ -13,7 +13,7 @@ mongoose.connect(process.env.DATABASE).then(() => {
 })
 
 //Staff model
-const Staff = require("./models/staff.js");
+const Staff = require("../models/staff.js");
 
 //Skapa användare
 router.post("/register", async (req, res) => {
@@ -36,6 +36,37 @@ router.post("/register", async (req, res) => {
     }
 });
 
+//Logga in 
+router.post("/login", async (req, res) => {
+    try{
+        const {username, password} = req.body;
+
+        //Validera
+        if(!username||!passoword) {
+            return res.status(400).json({error: "Ej korrekt input, skicka användarnamn och lösenord"});
+        }
+
+        //Finns användare?
+        const staff = await Staff.findOne({ username: username });
+
+        if(!staff) {
+            return res.status(401).json({ error: "Inkorrect användarnamn/lösenord"});
+        }
+
+        //Kontroll lösenord
+        const isPasswordMatched = await staff.comparePassword(password);
+        if(!isPasswordMatched) {
+            return res.status(401).json({ error: "Felaktigt användarnamn/lösenord"});
+        }else {
+            //Skapa JWT
+            const payload = {username: username};                                                           //Användare lagras i JWT
+            const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {expiresIn: '8h'});
+            res.status(200).json({message: "Inloggad!", token});
+        }
+    }catch(error) {
+        res.status(500).json({ error: "Server fel"});
+    }
+});
 
 
 
