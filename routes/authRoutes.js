@@ -187,12 +187,32 @@ router.get("/menu", async (req, res) => {
 
 
 //Hämta specifik maträtt
+router.get("/menu/:id", async (req, res) => {
+    try{
+        const { id } = req.params.id;
+        const menu = await Menu.getMenuById(id);
+        if(!menu) {
+            return res.status(404).json({ error: "Meny hittades ej"});
+        }                                                    
+        res.status(200).json(menu);
+    }catch (error){
+        console.error("Server fel" + error);
+        res.status(500).json({ error: "Server fel"});
+    }
+    });
+
+
 
 //Uppdatera maträtt
 router.put("/menu/:id", async (req, res) => {
     try {
-        const { id } = req.params;
+        const id = req.params.id;
         const { name, description, price } = req.body;
+        const updateData = { name, description, price };
+        const updatedMenu = await Menu.updateMenu(id, updateData);
+        res.status(200).json(updatedMenu);
+        res.status(200).json({message: "Meny uppdaterad"});
+
 
         //Validera input
         if (!name) {
