@@ -154,7 +154,7 @@ router.post("/createMenu", async (req, res) => {
             return res.status(400).json({error: "Felaktigt input, skicka namn, beskrivning och pris"});
         }
 
-        //Kontroll om användare redan finns
+        //Kontroll om meny redan finns
         const existingMenu = await Menu.findOne({ name });
         if(existingMenu) {
             return res.status(400).json({ error: "Namn för maträtt finns redan"});
@@ -206,23 +206,21 @@ router.get("/menu/:id", async (req, res) => {
 //Uppdatera maträtt
 router.put("/menu/:id", async (req, res) => {
     try {
-        const id = req.params.id;
-        const { name, description, price } = req.body;
+        const id = req.params.id;                                       //Hämtar ID från URL-parametern
+        const { name, description, price } = req.body;                  //Hämtar data från fronten
+        
+        //Skapar uppdateringsobjekt
         const updateData = { name, description, price };
-        const updatedMenu = await Menu.updateMenu(id, updateData);
-        res.status(200).json(updatedMenu);
-        res.status(200).json({message: "Meny uppdaterad"});
-
-
-        //Validera input
-        if (!name) {
-            return res.status(400).json({ error: "Felaktig input, skicka namn på maträtt"});
+        
+        //Uppdaterar maträtt i databasen
+        const updatedMenu = await Menu.findByIdAndUpdate(id, updateData, { new: true});
+        
+        //Kontrollera uppdatering
+        if (!updatedMenu) {
+            return res.status(404).json({ error: "Maträtt finns ej"});
         }
 
-        //Uppdatera maträtt
-        await Staff.findByIdAndUpdate(id, { name, description, price });
-
-        res.status(200).json({ message: "Meny uppdaterat"});
+        res.status(200).json({ message: "Meny uppdaterad", menu: updatedMenu});
     }catch (error) {
         console.error("Server error:", error);
         res.status(500).json({ error: "Server error"});
@@ -234,7 +232,7 @@ router.delete("/menu/:id", async (req, res) => {
     try {
         const { id } = req.params;
 
-        //Radera användare
+        //Radera meny
         await Menu.findByIdAndDelete(id);
 
         res.status(200).json({ message: "Meny raderad"});
