@@ -207,16 +207,32 @@ router.get("/menu/:id", async (req, res) => {
 router.put("/menu/:id", async (req, res) => {
     try {
         const id = req.params.id;                                       //Hämtar ID från URL-parametern
+
+         // Kontrollera om id är ett giltigt ObjectId
+         if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ error: "Ogiltigt ID-format" });
+        }
+
+
         const { name, description, price } = req.body;                  //Hämtar data från fronten
         
+        //Kontroll-loggar
+        console.log("ID från URL-parametern:", id);
+        console.log("Uppdateringsdata:", { name, description, price });
+
         //Skapar uppdateringsobjekt
         const updateData = { name, description, price };
         
         //Uppdaterar maträtt i databasen
         const updatedMenu = await Menu.findByIdAndUpdate(id, updateData, { new: true});
         
+        //Kontroll-logg
+        console.log("Uppdaterad meny:", updatedMenu);
+
+
         //Kontrollera uppdatering
         if (!updatedMenu) {
+            console.log("Maträtt finns ej.");
             return res.status(404).json({ error: "Maträtt finns ej"});
         }
 
