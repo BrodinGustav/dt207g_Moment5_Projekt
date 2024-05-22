@@ -220,6 +220,11 @@ router.put("/menu/:id", async (req, res) => {
         console.log("ID från URL-parametern:", id);
         console.log("Uppdateringsdata:", { name, description, price });
 
+         // Kontrollera att alla fält är ifyllda
+         if (!name || !description || !price) {
+            return res.status(400).json({ error: "Alla fält måste vara ifyllda" });
+        }
+
         //Skapar uppdateringsobjekt
         const updateData = { name, description, price };
         
