@@ -160,7 +160,7 @@ router.post("/createMenu", async (req, res) => {
         //Kontroll om meny redan finns
         const existingMenu = await Menu.findOne({ name });
         if(existingMenu) {
-            return res.status(400).json({ error: "Namn för maträtt finns redan"});
+            return res.status(400).json({ error: "Maträtt finns redan"});
         }
 
             //Korrekt input - skapa ny maträtt
