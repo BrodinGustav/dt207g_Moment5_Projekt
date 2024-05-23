@@ -17,6 +17,9 @@ const Staff = require("../models/staff.js");
 //Menu model
 const Menu = require("../models/menu.js");
 
+
+/********CRUD FÖR STAFF ************/
+
 //Skapa användare
 router.post("/register", async (req, res) => {
     try{
@@ -140,7 +143,7 @@ router.delete("/staff/:id", async (req, res) => {
 });
 
 
-/*******ROUTES för menu ****************/
+/*******CRUD FÖR MENY ****************/
 
 
 //Skapa meny
